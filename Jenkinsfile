@@ -9,8 +9,8 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/bhargavisirigiri/maven-pro.git'
+                git branch: 'main', url: 'https://github.com/bhargavisirigiri/maven-pro.git'
+
             }
         }
 
