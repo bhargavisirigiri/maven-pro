@@ -2,24 +2,19 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven'
-    }
-
-    environment {
-        TOMCAT_USER = "admin"
-        TOMCAT_PASS = "admin123"
-        TOMCAT_URL  = "http://<34.222.239.150>:8080/manager/text"
+        maven 'maven'   // Jenkins Maven installation name
     }
 
     stages {
-        
+
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/bhargavisirigiri/maven-pro.git'
+                git branch: 'main',
+                url: 'https://github.com/bhargavisirigiri/maven-pro.git'
             }
         }
 
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
                 sh 'mvn clean package -DskipTests'
             }
@@ -27,15 +22,16 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
-                sh '''
-                    WAR_FILE=$(ls target/*.war)
-                    echo "Deploying WAR: $WAR_FILE"
-
-                    curl -u $TOMCAT_USER:$TOMCAT_PASS \
-                        -T $WAR_FILE \
-                        "$TOMCAT_URL/deploy?path=/myapp&update=true"
-                '''
+                deploy adapters: [
+                    tomcat9(
+                        credentialsId: 'tomcat-deploy',
+                        path: '',
+                        url: 'http://44.255.197.58:8080'
+                    )
+                ], 
+                war: 'target/*.war'
             }
         }
     }
 }
+
