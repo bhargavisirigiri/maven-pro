@@ -4,20 +4,20 @@
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 🏷️ Basic project info -->
+    <!--  Basic project info -->
     <groupId>com.bhargavi</groupId>
     <artifactId>maven-pro</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Java Demo Project</name>
 
-    <!-- 🧱 Specify the Java version -->
+    <!-- Specify the Java version -->
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
-    <!-- ⚙️ Dependencies -->
+    <!--  Dependencies -->
     <dependencies>
         <!-- JUnit 5 for testing -->
         <dependency>
@@ -35,7 +35,7 @@
         </dependency>
     </dependencies>
 
-    <!-- 🧪 Tell Maven to use JUnit 5 -->
+    <!--  Tell Maven to use JUnit 5 -->
     <build>
         <plugins>
             <!-- Compiler plugin -->
