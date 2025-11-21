@@ -1,38 +1,39 @@
-pipeline {
-    agent any
+echo "===== Step 1: Clean Workspace ====="
+rm -rf maven-pro
+rm -rf target
 
-    tools {
-        maven 'Maven-3.9.9'
-    }
+echo "===== Step 2: Clone Git Repository ====="
+git clone -b main https://github.com/bhargavisirigiri/maven-pro.git
 
-    stages {
+cd maven-pro
 
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/bhargavisirigiri/maven-pro.git', branch: 'main'
-            }
-        }
+echo "===== Step 3: Maven Build (WAR) ====="
+mvn clean package
 
-        stage('Build with Maven') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
+if [ $? -ne 0 ]; then
+  echo "Maven build failed!"
+  exit 1
+fi
 
-        stage('Deploy to Tomcat') {
-            steps {
-                deploy(
-                    adapters: [
-                        tomcat9(
-                            credentialsId: 'tomcat-deploy',
-                            path: '',
-                            url: 'http://44.255.197.58:8080'
-                        )
-                    ],
-                    war: 'target/*.war'
-                )
-            }
-        }
-    }
-}
+echo "===== Step 4: Find WAR File ====="
+WAR_FILE=$(find target -name "*.war" | head -n 1)
+
+if [ -z "$WAR_FILE" ]; then
+  echo "No WAR file found! Build failed."
+  exit 1
+fi
+
+echo "WAR File Found: $WAR_FILE"
+
+echo "===== Step 5: Deploying to Tomcat ====="
+curl -u admin:StrongPassword123 \
+     -T "$WAR_FILE" \
+     "http://16.146.101.231:8080/manager/text/deploy?path=/myapp&update=true"
+
+if [ $? -eq 0 ]; then
+   echo "===== Deployment Successful ====="
+else
+   echo "===== Deployment FAILED ====="
+   exit 1
+fi
 
