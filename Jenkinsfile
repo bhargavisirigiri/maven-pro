@@ -28,7 +28,7 @@ echo "WAR File Found: $WAR_FILE"
 echo "===== Step 5: Deploying to Tomcat ====="
 curl -u admin:StrongPassword123 \
      -T "$WAR_FILE" \
-     "http://16.146.101.231:8080/manager/text/deploy?path=/myapp&update=true"
+     "http://44.255.180.0:8080/manager/text/deploy?path=/myapp&update=true"
 
 if [ $? -eq 0 ]; then
    echo "===== Deployment Successful ====="
