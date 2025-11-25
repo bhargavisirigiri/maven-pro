@@ -1,24 +1,29 @@
-pipeline{
-  agent any
-  tools {
-    maven  'Maven-3.9.9'
-  }
-  stages {
-    stage('Build') {
-      steps {
-        sh 'mvn clean package'
-      }
-      post{
-        success{
-          echo "Archiving the Artifacts"
-          archiveArtifacts artifacts:'**/target/*.war'
-        }
-      }
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven-3.9.9'   // Your Jenkins Maven tool name
     }
-    stage('Deploy to tomcat server') {
-          steps{
-            deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcat-deploy', path: '', url: 'http://34.217.5.184:8080/')], contextPath: null, war: '**/*.war'
-          }
-   }    
-  }         
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/bhargavisirigiri/maven-pro.git'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            }
+        }
+    }
 }
